@@ -1,0 +1,59 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sbn
+import seaborn as sns
+import matplotlib.patches as mp
+
+from google.colab import drive
+drive.mount('/content/drive')
+
+ebolaDataPath = '/content/drive/MyDrive/BAT 404/ebola_data_db_format.xlsx'
+
+df = pd.read_excel(ebolaDataPath)
+df.info() 
+
+df.shape
+
+df["Date"] = pd.to_datetime(df["Date"])
+year = df["Date"].dt.year.apply(str) 
+month = df["Date"].dt.month.apply(str) 
+df['Year-Month'] = year + "/" + month
+df.sort_values(by=["Year-Month","Country","Indicator","value"], ignore_index=True, inplace=True)
+
+
+plt.figure(figsize = (30,15))
+sbn.scatterplot(x="Date", y="value", hue="Country", data=df, palette="Set2").set_title("10 Countries affected by Ebola Virus year 2014-2016", fontsize=15)
+plt.show()
+
+
+
+value = "Cumulative number of confirmed, probable and suspected Ebola deaths"
+graph2 = df.loc[df['Indicator'] == value]
+graph2
+
+plt.figure(figsize = (30,15))
+sbn.lineplot(x="Date", y="value", hue="Country", data=graph2, palette="Set2").set_title("10 Countries cumulative number of confirmed, probable and suspected Ebola deaths year 2014-2016", fontsize=15)
+plt.show()
+
+
+
+trypath = '/content/drive/MyDrive/BAT 404/try.csv'
+new = pd.read_csv(trypath)
+new.head()
+
+sns.barplot(x="Country", y="Year 2014", ci=None, data=new)
+plt.xlabel("Country")
+plt.ylabel("Cases")
+plt.title("Top 3 Affected Countries in Year 2014")
+
+
+
+trypath = '/content/drive/MyDrive/BAT 404/try.csv'
+new2 = pd.read_csv(trypath)
+new2.head()
+
+sns.lineplot(x="Country", y="Year2015", ci=None, data=new2)
+plt.xlabel("Country")
+plt.ylabel("Average Cases")
+plt.title("Top 3 Affected Countries in Year 2015")
+
